@@ -1,0 +1,204 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ConsoleApp15
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+
+            //Hexer auswahl
+
+            Console.WriteLine("--------------------------------------");
+            Console.WriteLine("----Willkommen in The Witcher RPG!----");
+            Console.WriteLine("--------------------------------------");
+            Console.WriteLine();
+            Console.WriteLine("Wähle einen Hexer:");
+            Console.WriteLine();
+            Console.WriteLine("1. Geralt");
+            Console.WriteLine("2. Lambert");
+            Console.WriteLine("3. Eskel");
+            Console.WriteLine("4. Vesemir");
+
+            int spielergesundheit = 0;
+            int spielerstaerke = 0;
+            string spielerName = "";
+
+            { 
+                Console.WriteLine();
+                Console.WriteLine("Wähle 1, 2, 3 oder 4:");
+                string wahl = Console.ReadLine();
+
+                Console.Clear();
+
+                if (wahl == "1")
+                {
+                    spielerName = "Geralt";
+                    spielerstaerke = 16;
+                    spielergesundheit = 100;
+                }
+                else if (wahl == "2")
+                {
+                    spielerName = "Lambert";
+                    spielerstaerke = 13;
+                    spielergesundheit = 90;
+                }
+                else if (wahl == "3")
+                {
+                    spielerName = "Eskel";
+                    spielerstaerke = 12;
+                    spielergesundheit = 80;
+                }
+                else if (wahl == "4")
+                {
+                    spielerName = "Vesemir";
+                    spielerstaerke = 14;
+                    spielergesundheit = 60;
+                }
+               
+            }
+
+            Console.WriteLine();
+            Console.WriteLine($"Du hast dich für {spielerName} entschieden! Wenn die Zeit des weißen Frosts kommt, iss nicht den gelben Schnee.");
+
+            Console.Clear();
+
+            Random rnd = new Random();
+
+            //Alle Random sachen
+
+            string[] gegnername = { "Bruxa", "Mittagserscheinung", "Kikimora", "Ghoul", "Vampir" }; 
+            int[] gegnerstarke = { 12, 7, 8, 15, 10 };
+            int[] gegnergesundheit = { 70, 50, 60, 100, 80 };
+
+
+            int nameIndex = rnd.Next(gegnername.Length);
+            int gesundheitIndex = rnd.Next(gegnergesundheit.Length);
+            int starkeIndex = rnd.Next(gegnerstarke.Length);
+
+            string[] zauberschaden = { "Axii", "Yrden", "Igni", "Aard" };
+            int[] zauberwirkung = { 14, 17, 20, 22 };
+
+            int zauberIndex = rnd.Next(zauberschaden.Length);
+
+            //
+
+            string[] heiltrank = { "Weide" };
+            int[] heilwirkung = { 30 };
+
+
+            Console.WriteLine("Der Wind trägt das Heulen von Monstern, die sich in der Dunkelheit verstecken...");
+            Thread.Sleep(3000);
+            Console.WriteLine();
+
+
+            Console.WriteLine($"Ein/e {gegnername[nameIndex]} mit {gegnerstarke[starkeIndex]} Angriffstärke ist erschienen!");
+            Console.WriteLine();
+            Console.WriteLine($"Aktuelle Lebenspunkte von {spielerName}: {spielergesundheit}");
+            Console.WriteLine($"Aktuelle Lebenspunkte von {gegnername[nameIndex]}: {gegnergesundheit[gesundheitIndex]}");
+
+           
+
+            
+
+            while (gegnergesundheit[gesundheitIndex] > 0 && spielergesundheit > 0)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Was entscheidest du?");
+                Console.WriteLine();
+                Console.WriteLine("1. Angreifen");
+                Console.WriteLine("2. Zauber");
+                Console.WriteLine("3. Heiltrank");    
+                Console.WriteLine("4. Fliehen");
+                Console.WriteLine();
+                Console.Write("Wähle eine Option: ");
+                string wahl6 = Console.ReadLine();
+
+
+                //Angriff-Schaden
+                if (wahl6 == "1")
+                {
+
+                    int schaden = rnd.Next(8, spielerstaerke + 1);
+                    gegnergesundheit[gesundheitIndex] -= schaden;
+                    Console.WriteLine();
+                    Console.WriteLine($"{spielerName} hat {gegnername[nameIndex]} angegriffen und verursachte {schaden} Schaden!");
+                    Console.WriteLine();
+                    Console.WriteLine($"Aktuelle Lebenspunkte von {spielerName}: {spielergesundheit}");
+                    Console.WriteLine($"Aktuelle Lebenspunkte von {gegnername[nameIndex]}: {gegnergesundheit[gesundheitIndex]}");
+
+
+                    if (gegnergesundheit[gesundheitIndex] <= 0)
+                    {
+                        Console.WriteLine() ;
+                        Console.WriteLine($"{spielerName} hat den Gegner besiegt!");
+                        break;
+
+                    }
+                }
+
+                //Zeichen - Schaden
+                else if (wahl6 == "2")
+                {
+                    int schaden = rnd.Next(14, spielerstaerke + 1);
+                    gegnergesundheit[gesundheitIndex] -= schaden;
+                    Console.WriteLine();
+                    Console.WriteLine($"{spielerName} hat den {zauberschaden[zauberIndex]} Zeichen verwendet und {schaden} angerichtet!");
+                    Console.WriteLine();
+                    Console.WriteLine($"Aktuelle Lebenspunkte von {spielerName}: {spielergesundheit}");
+                    Console.WriteLine($"Aktuelle Lebenspunkte von {gegnername[nameIndex]}: {gegnergesundheit[gesundheitIndex]}");
+
+                    if (gegnergesundheit[gesundheitIndex] <= 0)
+
+                    {
+                        Console.WriteLine($"{spielerName} hat den Gegner besiegt!");
+                        break;
+                    }
+
+                }
+
+                // Feind- Schaden
+                int feindSchaden = rnd.Next(7, gegnerstarke[starkeIndex] + 1);
+                spielergesundheit -= feindSchaden;
+                Console.WriteLine();
+                Console.WriteLine($"{gegnername[nameIndex]} greift dich an und verursacht {feindSchaden} Schaden!");
+                Console.WriteLine();
+                Console.WriteLine($"Aktuelle Lebenspunkte von {spielerName}: {spielergesundheit}");
+                Console.WriteLine($"Aktuelle Lebenspunkte von {gegnername[nameIndex]}: {gegnergesundheit[gesundheitIndex]}");
+
+
+                if (spielergesundheit <= 0)
+                {
+                    Console.WriteLine($"{spielerName} wurde besiegt.");
+                    break;
+                }
+
+                if (wahl6 == "3")
+                {
+                    spielergesundheit += heilwirkung[0];
+                    Console.WriteLine($"{spielerName} hat einen Heiltrank verwendet und {heilwirkung[0]} Lebenspunkte wiederhergestellt!");
+                    if (spielergesundheit > 100) spielergesundheit = 100;
+                    Console.WriteLine();
+                    Console.WriteLine($"Aktuelle Lebenspunkte von {spielerName}: {spielergesundheit}");
+                    Console.WriteLine($"Aktuelle Lebenspunkte von {gegnername[nameIndex]}: {gegnergesundheit[gesundheitIndex]}");
+                }
+
+         
+
+
+                else if (wahl6 == "4")
+                {
+                    Console.WriteLine($"{spielerName} ist geflohen.");
+                    break;
+                }
+            
+            }
+        }
+    }
+}
